@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firofame Home Buyer Portal - Verified Kerala RERA Real Estate Decision Engine</title>
+  <meta name="description" content="Explore, compare, and analyze 1,650+ RERA-registered real estate projects across Kerala. Price estimates, EMI calculator, developer risk scorecards, and side-by-side property comparison.">
+  
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-house-chimney-window"></i></div>
+        <div class="logo-text">
+          <h1>Firofame Home Buyer Portal</h1>
+          <p>Official Kerala RERA Verified Real Estate Decision Engine</p>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <button id="nav-btn-calc" class="btn btn-secondary"><i class="fa-solid fa-calculator"></i> EMI Calculator</button>
+        <button id="nav-btn-checklist" class="btn btn-secondary"><i class="fa-solid fa-clipboard-check"></i> Buyer Checklist</button>
+        <button id="nav-btn-bookmarks" class="btn btn-amber"><i class="fa-solid fa-heart"></i> Shortlist (<span id="nav-fav-count">0</span>)</button>
+      </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+      <div class="hero-overlay">
+        <div class="hero-content">
+          <div class="hero-tag"><i class="fa-solid fa-shield-halved"></i> 100% K-RERA Verified Data</div>
+          <h2 class="hero-title">Find Your Verified <span>Dream Home</span> in Kerala</h2>
+          <p class="hero-subtitle">Make confident real estate decisions. Explore 1,650+ registered projects across all 14 districts in Kerala with price bracket estimates, developer background checks, and mortgage affordability tools.</p>
+        </div>
+
+        <!-- Stats Ticker -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total RERA Projects</div>
+            <div class="stat-value" id="stat-total-projects">1,650</div>
+            <div class="stat-subtext"><i class="fa-solid fa-circle-check"></i> Verified Registrations</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Residential Units</div>
+            <div class="stat-value" id="stat-total-units">0</div>
+            <div class="stat-subtext">Apartments, Villas & Plots</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Floor Area</div>
+            <div class="stat-value" id="stat-total-area">0 m²</div>
+            <div class="stat-subtext">Approved Construction</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Covered Localities</div>
+            <div class="stat-value" id="stat-total-villages">0</div>
+            <div class="stat-subtext">Villages & Panchayaths</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Buyer Tools Ribbon -->
+    <div class="buyer-tools-ribbon">
+      <button class="tool-badge-btn" id="tool-btn-emi">
+        <div class="tool-icon purple"><i class="fa-solid fa-calculator"></i></div>
+        <div class="tool-info">
+          <div class="title">Mortgage & EMI Calculator</div>
+          <div class="desc">Calculate monthly payments & loan tenure</div>
+        </div>
+      </button>
+
+      <button class="tool-badge-btn" id="tool-btn-compare">
+        <div class="tool-icon emerald"><i class="fa-solid fa-code-compare"></i></div>
+        <div class="tool-info">
+          <div class="title">Side-by-Side Comparison</div>
+          <div class="desc">Compare specs of up to 3 projects</div>
+        </div>
+      </button>
+
+      <button class="tool-badge-btn" id="tool-btn-checklist">
+        <div class="tool-icon amber"><i class="fa-solid fa-list-check"></i></div>
+        <div class="tool-info">
+          <div class="title">RERA Due Diligence</div>
+          <div class="desc">Essential legal & title verification checklist</div>
+        </div>
+      </button>
+
+      <button class="tool-badge-btn" id="tool-btn-shortlist">
+        <div class="tool-icon rose"><i class="fa-solid fa-heart"></i></div>
+        <div class="tool-info">
+          <div class="title">My Saved Shortlist</div>
+          <div class="desc">View bookmarked homes & buyer notes</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- Filter Controls Card -->
+    <section class="controls-card">
+      <div class="search-bar-row">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="search-input" class="search-input" placeholder="Search by Project Name, Developer/Promoter, Locality, RERA Reg No, or Pincode...">
+        </div>
+        <button id="btn-export-csv" class="btn btn-secondary"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+        <button id="btn-export-json" class="btn btn-secondary"><i class="fa-solid fa-file-code"></i> Export JSON</button>
+      </div>
+
+      <div class="filters-row">
+        <div class="select-group">
+          <label><i class="fa-solid fa-city"></i> District</label>
+          <select id="filter-district" class="custom-select">
+            <option value="">All Districts (14)</option>
+          </select>
+        </div>
+
+        <div class="select-group">
+          <label><i class="fa-solid fa-map-pin"></i> Locality / Village</label>
+          <select id="filter-village" class="custom-select">
+            <option value="">All Localities</option>
+          </select>
+        </div>
+
+        <div class="select-group">
+          <label><i class="fa-solid fa-building"></i> Property Type</label>
+          <select id="filter-type" class="custom-select">
+            <option value="">All Types</option>
+            <option value="apartment">Apartments / Highrise</option>
+            <option value="villa">Villas / Gated Community</option>
+            <option value="plot">Plot / Layout</option>
+          </select>
+        </div>
+
+        <div class="select-group">
+          <label><i class="fa-solid fa-truck-ramp-box"></i> Readiness / Completion</label>
+          <select id="filter-readiness" class="custom-select">
+            <option value="">All Stages</option>
+            <option value="ready">Ready to Move (&le; 2026)</option>
+            <option value="nearing">Nearing Completion (2026-2027)</option>
+            <option value="under_construction">Under Construction (2028+)</option>
+          </select>
+        </div>
+
+        <div class="select-group">
+          <label><i class="fa-solid fa-arrow-down-short-wide"></i> Sort By</label>
+          <select id="sort-by" class="custom-select">
+            <option value="units-desc" selected>Residential Units (High to Low)</option>
+            <option value="price-asc">Est. Price (Low to High)</option>
+            <option value="price-desc">Est. Price (High to Low)</option>
+            <option value="name-asc">Project Name (A-Z)</option>
+            <option value="date-desc">Completion Date (Newest)</option>
+            <option value="area-desc">Total Area (High to Low)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick Filter Pills -->
+      <div class="quick-pills">
+        <span class="pill active" data-pill="all">All Projects</span>
+        <span class="pill" data-pill="tvm">Trivandrum</span>
+        <span class="pill" data-pill="kochi">Ernakulam / Kochi</span>
+        <span class="pill" data-pill="thrissur">Thrissur</span>
+        <span class="pill" data-pill="kozhikode">Kozhikode</span>
+        <span class="pill" data-pill="ready">Ready to Move</span>
+        <span class="pill" data-pill="villas">Villa Communities</span>
+      </div>
+    </section>
+
+    <!-- Visual Analytics -->
+    <section class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title"><i class="fa-solid fa-chart-column"></i> Top Kerala Localities by Project Volume</div>
+        </div>
+        <div class="chart-container">
+          <canvas id="localityChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title"><i class="fa-solid fa-chart-pie"></i> Buyer Delivery Stage Distribution</div>
+        </div>
+        <div class="chart-container">
+          <canvas id="timelineChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toolbar & Results Section -->
+    <div class="toolbar-row">
+      <div class="results-count">Showing <span id="displayed-count">0</span> of <span id="total-count">0</span> projects</div>
+      
+      <div class="view-options">
+        <button id="btn-show-all" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"><i class="fa-solid fa-list-ul"></i> All Projects</button>
+        <button id="btn-show-favs" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"><i class="fa-solid fa-heart" style="color: var(--rose);"></i> Shortlist (<span id="fav-count">0</span>)</button>
+      </div>
+    </div>
+
+    <!-- Projects Grid -->
+    <main id="projects-grid" class="projects-grid"></main>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="empty-state" style="display: none;">
+      <div class="empty-icon"><i class="fa-solid fa-building-circle-xmark"></i></div>
+      <div class="empty-title">No matching properties found</div>
+      <div class="empty-desc">Try clearing your filters or searching with a different locality, district, or developer name.</div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p><i class="fa-solid fa-shield-halved" style="color: var(--emerald);"></i> Official Data Source: Kerala Real Estate Regulatory Authority (K-RERA)</p>
+      <p style="margin-top: 0.3rem;">Firofame Home Buyer Portal &copy; 2026. Empowering buyers with verified real estate intelligence.</p>
+    </footer>
+  </div>
+
+  <!-- Floating Comparison Docking Bar -->
+  <div id="compare-dock" class="compare-dock">
+    <div style="font-family: var(--font-heading); font-weight: 700; color: white; font-size: 0.9rem;">
+      <i class="fa-solid fa-code-compare" style="color: var(--primary-light);"></i> Comparing Properties (<span id="compare-count-dock">0</span>/3)
+    </div>
+    <div id="dock-items" class="dock-items"></div>
+    <div style="display: flex; gap: 0.5rem;">
+      <button id="btn-launch-compare" class="btn btn-emerald" style="padding: 0.4rem 0.9rem; font-size: 0.82rem;">
+        Compare Now <i class="fa-solid fa-arrow-right"></i>
+      </button>
+      <button id="btn-clear-compare" class="btn btn-secondary" style="padding: 0.4rem 0.6rem; font-size: 0.82rem;">
+        Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- Project Detail Modal -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+      <button id="modal-close" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- EMI Calculator Modal -->
+  <div id="calc-modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+      <button id="calc-modal-close" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header-title"><i class="fa-solid fa-calculator" style="color: var(--primary-light);"></i> Home Loan EMI Calculator</div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Estimate your monthly home loan repayments, principal breakdown, and required down payment.</p>
+
+      <div class="calc-grid">
+        <div class="calc-group">
+          <label>Estimated Property Price (₹)</label>
+          <input type="number" id="calc-price" class="calc-input" value="6500000" step="100000">
+        </div>
+        <div class="calc-group">
+          <label>Down Payment (%)</label>
+          <input type="number" id="calc-downpay-pct" class="calc-input" value="20" min="0" max="90">
+        </div>
+        <div class="calc-group">
+          <label>Interest Rate (% p.a.)</label>
+          <input type="number" id="calc-rate" class="calc-input" value="8.5" step="0.1">
+        </div>
+        <div class="calc-group">
+          <label>Loan Tenure (Years)</label>
+          <input type="number" id="calc-tenure" class="calc-input" value="20" min="1" max="30">
+        </div>
+      </div>
+
+      <div class="calc-results-box">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Estimated Monthly EMI</div>
+        <div id="calc-emi-display" class="calc-emi-val">₹42,650 / mo</div>
+        <div style="display: flex; justify-content: space-around; margin-top: 1rem; font-size: 0.85rem; color: var(--text-main);">
+          <div>Loan Amount: <strong id="calc-loan-amt">₹52,00,000</strong></div>
+          <div>Total Interest: <strong id="calc-total-interest">₹50,36,000</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Matrix Modal -->
+  <div id="compare-modal-overlay" class="modal-overlay">
+    <div class="modal-card modal-lg">
+      <button id="compare-modal-close" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header-title"><i class="fa-solid fa-code-compare" style="color: var(--emerald);"></i> Property Side-by-Side Comparison</div>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Comparing key buyer decision metrics for selected properties.</p>
+      
+      <div id="compare-matrix-container" style="overflow-x: auto;"></div>
+    </div>
+  </div>
+
+  <!-- Due Diligence Checklist Modal -->
+  <div id="checklist-modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+      <button id="checklist-modal-close" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header-title"><i class="fa-solid fa-shield-halved" style="color: var(--amber);"></i> Home Buyer RERA Due Diligence Checklist</div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">Key legal and regulatory items every home buyer in Kerala should verify before booking.</p>
+
+      <div id="checklist-items-container">
+        <div class="checklist-item">
+          <input type="checkbox" id="chk-1" checked>
+          <label for="chk-1" class="checklist-text">
+            <strong>1. K-RERA Registration Verification</strong>
+            Verify that the unique RERA registration number (e.g. K-RERA/PRJ/...) is valid on the official K-RERA portal.
+          </label>
+        </div>
+
+        <div class="checklist-item">
+          <input type="checkbox" id="chk-2">
+          <label for="chk-2" class="checklist-text">
+            <strong>2. Clear Title & Encumbrance Certificate (EC)</strong>
+            Ensure the promoter has clear land title ownership free of litigations or prior mortgages for at least 30 years.
+          </label>
+        </div>
+
+        <div class="checklist-item">
+          <input type="checkbox" id="chk-3">
+          <label for="chk-3" class="checklist-text">
+            <strong>3. Approved Building Sanction Plan</strong>
+            Check local Municipality / Corporation / Panchayath approved structural and floor plans against advertised layouts.
+          </label>
+        </div>
+
+        <div class="checklist-item">
+          <input type="checkbox" id="chk-4">
+          <label for="chk-4" class="checklist-text">
+            <strong>4. Escrow Account Transparency</strong>
+            RERA mandates that 70% of buyer payments must be deposited in a designated project escrow bank account.
+          </label>
+        </div>
+
+        <div class="checklist-item">
+          <input type="checkbox" id="chk-5">
+          <label for="chk-5" class="checklist-text">
+            <strong>5. Completion & Occupancy Certificate (OC/CC)</strong>
+            Confirm expected delivery date and verify terms for Occupancy Certificate issuance prior to final payment.
+          </label>
+        </div>
+
+        <div class="checklist-item">
+          <input type="checkbox" id="chk-6">
+          <label for="chk-6" class="checklist-text">
+            <strong>6. Undivided Share of Land (UDL) Ratio</strong>
+            Review undivided share of land specified in sale agreement relative to apartment carpet area.
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
